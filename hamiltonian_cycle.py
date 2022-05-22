@@ -18,6 +18,9 @@ def get_permutations(liste):
 def ham_c_final(graph,start_v=None):
     """finds all hamiltonian cycles for a given graph from the given starting node"""
     vortexes = list(graph.all_vertices()) # creates list of all nodes
+    for nodes in vortexes:
+        if len(graph.edges(nodes))<2: # if any node has less than two edges, no ham. cycle is possible --> stops 
+            return "There is no hamiltonian cycle for this graph"
     if start_v == None: # sets starting node as first in vortexes, if it wasn't given yet 
         start_v = vortexes[0]
     vortexes.remove(start_v) # starting node gets removed, so that it won't be affected / shuffeled by permutations
