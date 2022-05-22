@@ -1,39 +1,43 @@
 from itertools import permutations
-from tracemalloc import start
-from graph import *
+from graph import * # --> graph needs to be a class from this
     
 def valid_connection(graph,node1,node2):
+    """checks if the connection between two nodes is existing/valid"""
     if node2 in graph.edges(node1):
         return True
     else:
         return False
 
 def get_permutations(liste):
+    """creates a list of lists for all permutations based on the given list"""
     all_per = []
     for x in permutations(liste):
         all_per.append(list(x))
     return all_per
 
-def ham_c_final(graph,start_v):
-    vortexes = list(graph.all_vertices())
-    vortexes.remove(start_v)
+def ham_c_final(graph,start_v=None):
+    """finds all hamiltonian cycles for a given graph from the given starting node"""
+    vortexes = list(graph.all_vertices()) # creates list of all nodes
+    if start_v == None: # sets starting node as first in vortexes, if it wasn't given yet 
+        start_v = vortexes[0]
+    vortexes.remove(start_v) # starting node gets removed, so that it won't be affected / shuffeled by permutations
     possibilitys = get_permutations(vortexes)
     valid = True
     ham_cycles = []
-    for liste in possibilitys:
+    for liste in possibilitys: # adds starting node to start and end of list
         liste.append(start_v)
         liste.insert(0,start_v)
     
-    for possibility in possibilitys:
+    for possibility in possibilitys: # goes through all permutations and checks for each neighbored nodes, if they are connected
         for nodes in possibility:
             if valid_connection(graph,nodes,possibility[possibility.index(nodes)+1]) == False:
                 valid = False
                 break
             else:
                 valid = True
-        if valid:
-            ham_cycles.append(possibility)
-    return ham_cycles
+        if valid: # if all nodes in the checked permutation were connected, the permutation is a hamiltonian cycle and therefore it will be added to the list of all ham. cycles 
+            ham_cycles.append(possibility) 
+    return ham_cycles if len(ham_cycles)>0 else "There is no hamiltonian cycle for this graph"
 
 
 test = Graph()
